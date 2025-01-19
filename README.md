@@ -11,7 +11,7 @@ PUBGPorting - Automation of the PUBG Porting Process
 
 ## Building PUBGPorting
 
-To build FortnitePorting from source, first clone the repository and all of its submodules.
+To build PUBGPorting from source, first clone the repository and all of its submodules.
 
 ```
 git clone -b v3 https://github.com/Wackyhcky/PUBGPorting --recursive
