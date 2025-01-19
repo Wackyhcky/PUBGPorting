@@ -20,5 +20,5 @@ git clone -b v3 https://github.com/Wackyhcky/PUBGPorting --recursive
 Then open the project directory in a terminal window and publish
 
 ```
-dotnet publish PUBGPorting -c Release --no-self-contained -r win-x64 -o "./Release" -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true
+dotnet publish FortnitePorting -c Release --no-self-contained -r win-x64 -o "./Release" -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:IncludeNativeLibrariesForSelfExtract=true
 ```
