@@ -35,7 +35,7 @@ public static class DiscordService
             new Button
             {
                 Label = "Join FortnitePorting",
-                Url = Globals.DISCORD_URL
+
             }
         ]
     };

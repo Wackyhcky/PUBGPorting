@@ -65,71 +65,22 @@ public partial class MapViewModel : ViewModelBase
     public static MapInfo[] MapInfos =
     [
         new(
-            "Asteria",
-            "FortniteGame/Content/Athena/Asteria/Maps/Asteria_Terrain",
-            "FortniteGame/Content/Athena/Apollo/Maps/UI/Apollo_Terrain_Minimap",
-            "FortniteGame/Content/Athena/Apollo/Maps/UI/T_MiniMap_Mask",
+            "Erangel",
+            "TslGame/Content/Maps/Erangel/Erangel_Main",
+            "TslGame/Content/UI/HUD/Erangel_Minimap",
+            "",
             0.01375f, 132, 140, 90, 12800, true
         ),
         new(
-            "Rufus",
-            "FortniteGame/Plugins/GameFeatures/Rufus/Content/Game/Athena/Maps/Athena_Terrain",
-            "FortniteGame/Plugins/GameFeatures/Rufus/Content/Game/UI/Capture_Iteration_Discovered_Rufus_03",
-            "FortniteGame/Content/Athena/UI/Rufus/Rufus_Map_Frosty_PostMask",
+            "Desert",
+            "TslGame/Content/Maps/Desert/Desert_Main",
+            "TslGame/Content/UI/HUD/Desert_Minimap",
+            "",
             0.0155f, 256, 448, 102, 12800, true
+       
         ),
-        new(
-            "Helios",
-            "FortniteGame/Content/Athena/Helios/Maps/Helios_Terrain",
-            "FortniteGame/Content/Athena/Apollo/Maps/UI/Apollo_Terrain_Minimap",
-            "FortniteGame/Content/Athena/Apollo/Maps/UI/T_MiniMap_Mask",
-            0.014f, 0, 128, 92, 12800, true
-        ),
-        new(
-            "Apollo_Retro",
-            "FortniteGame/Plugins/GameFeatures/Clyde/Content/Apollo_Terrain_Retro",
-            "FortniteGame/Content/Athena/Apollo/Maps/Clyde/Textures/Week3_Adjusted",
-            "FortniteGame/Content/Athena/Apollo/Maps/Clyde/Textures/T_Clyde_Minimap_PostMask",
-            0.032f, -25, 96, 205, 12800, true
-        ),
-        new(
-            "Hermes",
-            "FortniteGame/Plugins/GameFeatures/BRMapCh6/Content/Maps/Hermes_Terrain",
-            "FortniteGame/Content/Athena/Apollo/Maps/UI/Apollo_Terrain_Minimap",
-            "FortniteGame/Content/Athena/Apollo/Maps/UI/T_MiniMap_Mask",
-            0.0146f, -100, -25, 96, 12800, true, false
-        ),
-        new(
-            "Figment",
-            "FortniteGame/Plugins/GameFeatures/Figment/Figment_S01_Map/Content/Athena_Terrain_S01",
-            "FortniteGame/Plugins/GameFeatures/Figment/Figment_S01_MapUI/Content/MiniMapAthena_S01_New",
-            "FortniteGame/Plugins/GameFeatures/Figment/Figment_S01_MapUI/Content/T_MiniMap_Mask_Figment",
-            0.017f, 380, 470, 110, 12800, true
-        ),
-        new(
-            "BlastBerry",
-            "/BlastBerryMap/Maps/BlastBerry_Terrain",
-            "/BlastBerry/Minimap/Capture_Iteration_Discovered_BlastBerry",
-            "/BlastBerry/MiniMap/T_MiniMap_Mask",
-            0.023f, -20, 215, 150, 12800, false
-        ),
-        new(
-            "PunchBerry",
-            "/632de27e-4506-41f8-532f-93ac01dc10ca/Maps/PunchBerry_Terrain",
-            "FortniteGame/Plugins/GameFeatures/BlastBerry/Content/MiniMap/Discovered_PunchBerry",
-            "FortniteGame/Plugins/GameFeatures/BlastBerry/Content/MiniMap/T_PB_MiniMap_Mask",
-            0.023f, -20, 215, 150, 12800, true
-        ),
-        new(
-            "FeralCorgi_2Bombsite_Map",
-            "/e1729c50-4845-01ba-18da-478919f7de66/Levels/FeralCorgi_2Bombsite_Map",
-            "/e1729c50-4845-01ba-18da-478919f7de66/MiniMap/T_KuraiMiniMap_FullAlpha",
-            "/e1729c50-4845-01ba-18da-478919f7de66/MiniMap/T_KuraiMiniMap_FullAlpha",
-            1, 0, 0, 0, 12800, true,
-            SourceName: "Ballistic"
-        ),
-        MapInfo.CreateNonDisplay("Athena", "FortniteGame/Content/Athena/Maps/Athena_Terrain"),
-        MapInfo.CreateNonDisplay("Apollo", "FortniteGame/Content/Athena/Apollo/Maps/Apollo_Terrain")
+        MapInfo.CreateNonDisplay("Erangel", "TslGame/Content/Maps/Erangel/Erangel_Main"),
+        MapInfo.CreateNonDisplay("Desert", "TslGame/Content/Maps/Desert/Desert_Main")
     ];
 
     private static string[] PluginRemoveList =

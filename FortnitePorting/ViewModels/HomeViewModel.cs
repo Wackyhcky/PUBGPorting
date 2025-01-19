@@ -65,12 +65,12 @@ public partial class HomeViewModel : ViewModelBase
     
     public void LaunchDiscord()
     {
-        Launch(Globals.DISCORD_URL);
+
     }
     
     public void LaunchTwitter()
     {
-        Launch(Globals.TWITTER_URL);
+
     }
     
     public void LaunchGitHub()
@@ -80,6 +80,6 @@ public partial class HomeViewModel : ViewModelBase
     
     public void LaunchKoFi()
     {
-        Launch(Globals.KOFI_URL);
+
     }
 }
