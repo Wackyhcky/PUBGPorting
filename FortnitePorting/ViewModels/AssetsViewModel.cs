@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CUE4Parse.UE4.AssetRegistry.Objects;
 using FluentAvalonia.UI.Controls;
 using FortnitePorting.Application;
 
@@ -16,6 +18,7 @@ using FortnitePorting.Shared;
 using FortnitePorting.Shared.Framework;
 using FortnitePorting.Shared.Services;
 using RestSharp;
+using Serilog;
 using AssetLoaderCollection = FortnitePorting.Models.Assets.Loading.AssetLoaderCollection;
 
 namespace FortnitePorting.ViewModels;
@@ -27,11 +30,31 @@ public partial class AssetsViewModel : ViewModelBase
     [ObservableProperty] private bool _isPaneOpen = true;
     [ObservableProperty] private EExportLocation _exportLocation = EExportLocation.Blender;
     
+    private Dictionary<string, string> AssetClasses = [];
+    
     public override async Task Initialize()
     {
+        
+        // CUE4ParseVM.AssetRegistry.ForEach(CheckAndUpdateCollection);
+        //
+        // Log.Information("Start Classes:");
+        // foreach (var (key, value) in AssetClasses)
+        // {
+        //     Log.Information("{0} {1}", key, value);
+        // }
+        // Log.Information("End Classes");
+        
         AssetLoaderCollection = new AssetLoaderCollection();
         await AssetLoaderCollection.Load(EExportType.Outfit);
     }
+
+    // private void CheckAndUpdateCollection(FAssetData asset)
+    // {
+    //     if (!AssetClasses.ContainsKey(asset.AssetClass.PlainText))
+    //     {
+    //         AssetClasses.Add(asset.AssetClass.PlainText, asset.ObjectPath);
+    //     }
+    // }
 
     public override async Task OnViewOpened()
     {

@@ -28,6 +28,7 @@ public static class Globals
     
     public static readonly FGuid ZERO_GUID = new();
     public const string ZERO_CHAR = "0x0000000000000000000000000000000000000000000000000000000000000000";
+    public const string MAIN_AES = "0x3435444431354436444432444135304145423731434537413532383443463845";
     
     public const string GITHUB_URL = "https://github.com/Wackyhcky/PUBGPorting";
 }

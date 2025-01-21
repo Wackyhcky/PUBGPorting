@@ -52,7 +52,7 @@ public class CUE4ParseViewModel : ViewModelBase
     public readonly HybridFileProvider Provider = AppSettings.Current.Installation.CurrentProfile.FortniteVersion switch
     {
         EFortniteVersion.LatestOnDemand => new HybridFileProvider(new VersionContainer(AppSettings.Current.Installation.CurrentProfile.UnrealVersion)),
-        EFortniteVersion.LatestInstalled => new HybridFileProvider(AppSettings.Current.Installation.CurrentProfile.ArchiveDirectory, ExtraDirectories, new VersionContainer(LATEST_GAME_VERSION)),
+        EFortniteVersion.LatestInstalled => new HybridFileProvider(AppSettings.Current.Installation.CurrentProfile.ArchiveDirectory, [], new VersionContainer(LATEST_GAME_VERSION)),
         _ => new HybridFileProvider(AppSettings.Current.Installation.CurrentProfile.ArchiveDirectory, [], new VersionContainer(AppSettings.Current.Installation.CurrentProfile.UnrealVersion)),
     };
     
@@ -77,24 +77,7 @@ public class CUE4ParseViewModel : ViewModelBase
     
     private static readonly Regex FortniteArchiveRegex = new(@"^FortniteGame(/|\\)Content(/|\\)Paks(/|\\)(pakchunk(?:0|10.*|\w+)-WindowsClient|global)\.(pak|utoc)$", RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
-    private static readonly List<DirectoryInfo> ExtraDirectories = 
-    [
-        new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FortniteGame", "Saved", "PersistentDownloadDir", "GameCustom", "InstalledBundles"))
-    ];
-    
-    private static readonly List<string> MaleLobbyMontagePaths = 
-    [
-        "FortniteGame/Content/Animation/Game/MainPlayer/Menu/BR/Male_Commando_Idle_01_M",
-        "FortniteGame/Content/Animation/Game/MainPlayer/Menu/BR/Male_commando_Idle_2_M"
-    ];
-    
-    private static readonly List<string> FemaleLobbyMontagePaths = 
-    [
-        "FortniteGame/Content/Animation/Game/MainPlayer/Menu/BR/Female_Commando_Idle_02_Rebirth_Montage",
-        "FortniteGame/Content/Animation/Game/MainPlayer/Menu/BR/Female_Commando_Idle_03_Montage"
-    ];
-
-    private const EGame LATEST_GAME_VERSION = EGame.GAME_UE5_6;
+    private const EGame LATEST_GAME_VERSION = EGame.GAME_PlayerUnknownsBattlegrounds;
 
     public override async Task Initialize()
     {
@@ -104,20 +87,6 @@ public class CUE4ParseViewModel : ViewModelBase
         Provider.LoadExtraDirectories = AppSettings.Current.Installation.CurrentProfile.LoadCreativeMaps;
         
         _onlineStatus = await ApiVM.FortnitePorting.GetOnlineStatusAsync();
-        
-        if (AppSettings.Current.Installation.CurrentProfile.FortniteVersion is EFortniteVersion.LatestInstalled
-            && (_onlineStatus.Backup.Keys 
-                ? await ApiVM.FortnitePorting.GetKeysAsync() 
-                : await ApiVM.FortniteCentral.GetKeysAsync() ?? await ApiVM.FortnitePorting.GetKeysAsync()) is { } aes
-            && !new PakFileReader(Path.Combine(AppSettings.Current.Installation.CurrentProfile.ArchiveDirectory,
-                "pakchunk0-WindowsClient.pak")).TestAesKey(new FAesKey(aes.MainKey)))
-        {
-            await TaskService.RunDispatcherAsync(() =>
-            {
-                AppWM.TimeWasterOpen = true;
-                AppWM.TimeWaster = new TimeWasterView(game: false);
-            });
-        }
 
         await CleanupCache();
 
@@ -141,19 +110,19 @@ public class CUE4ParseViewModel : ViewModelBase
         
         HomeVM.UpdateStatus("Loading Game Files");
         await InitializeProvider();
-        await InitializeTextureStreaming();
+        //await InitializeTextureStreaming();
         
         await LoadKeys();
         Provider.LoadLocalization(AppSettings.Current.Installation.CurrentProfile.GameLanguage);
         Provider.LoadVirtualPaths();
-        await LoadMappings();
+        //await LoadMappings();
         
         Provider.PostMount();
         
         await LoadAssetRegistries();
 
         HomeVM.UpdateStatus("Loading Application Assets");
-        await LoadApplicationAssets();
+        //await LoadApplicationAssets();
 
         HomeVM.UpdateStatus(string.Empty);
 
@@ -306,27 +275,27 @@ public class CUE4ParseViewModel : ViewModelBase
             case EFortniteVersion.LatestInstalled:
             case EFortniteVersion.LatestOnDemand:
             {
-                var aes = _onlineStatus.Backup.Keys 
-                    ? await ApiVM.FortnitePorting.GetKeysAsync() 
-                    : await ApiVM.FortniteCentral.GetKeysAsync() ?? await ApiVM.FortnitePorting.GetKeysAsync();
-                
-                if (aes is null)
-                {
-                    await LoadLocalKeys();
-                    break;
-                }
+                // var aes = _onlineStatus.Backup.Keys 
+                //     ? await ApiVM.FortnitePorting.GetKeysAsync() 
+                //     : await ApiVM.FortniteCentral.GetKeysAsync() ?? await ApiVM.FortnitePorting.GetKeysAsync();
+                //
+                // if (aes is null)
+                // {
+                //     await LoadLocalKeys();
+                //     break;
+                // }
 
-                AppSettings.Current.Installation.CurrentProfile.MainKey = new FileEncryptionKey(aes.MainKey);
-                await Provider.SubmitKeyAsync(Globals.ZERO_GUID, new FAesKey(aes.MainKey));
-                await OptionalProvider.SubmitKeyAsync(Globals.ZERO_GUID, new FAesKey(aes.MainKey));
+                AppSettings.Current.Installation.CurrentProfile.MainKey = new FileEncryptionKey(Globals.MAIN_AES);
+                await Provider.SubmitKeyAsync(Globals.ZERO_GUID, new FAesKey(Globals.MAIN_AES));
+                await OptionalProvider.SubmitKeyAsync(Globals.ZERO_GUID, new FAesKey(Globals.MAIN_AES));
                 
-                AppSettings.Current.Installation.CurrentProfile.ExtraKeys.Clear();
-                foreach (var key in aes.DynamicKeys)
-                {
-                    AppSettings.Current.Installation.CurrentProfile.ExtraKeys.Add(new FileEncryptionKey(key.Key));
-                    await Provider.SubmitKeyAsync(new FGuid(key.GUID), new FAesKey(key.Key));
-                    await OptionalProvider.SubmitKeyAsync(new FGuid(key.GUID), new FAesKey(key.Key));
-                }
+                // AppSettings.Current.Installation.CurrentProfile.ExtraKeys.Clear();
+                // foreach (var key in aes.DynamicKeys)
+                // {
+                //     AppSettings.Current.Installation.CurrentProfile.ExtraKeys.Add(new FileEncryptionKey(key.Key));
+                //     await Provider.SubmitKeyAsync(new FGuid(key.GUID), new FAesKey(key.Key));
+                //     await OptionalProvider.SubmitKeyAsync(new FGuid(key.GUID), new FAesKey(key.Key));
+                // }
                 
                 break;
             }
@@ -448,77 +417,6 @@ public class CUE4ParseViewModel : ViewModelBase
         {
             for (var i = 0; i < rarityData.Properties.Count; i++)
                 RarityColors.Add(rarityData.GetByIndex<FRarityCollection>(i));
-        }
-
-        if (await Provider.TryLoadObjectAsync("/BeanstalkCosmetics/Cosmetics/DataTables/DT_BeanstalkCosmetics_Colors") is UDataTable beanstalkColorTable)
-        {
-            foreach (var (name, fallback) in beanstalkColorTable.RowMap)
-            {
-                var index = int.Parse(name.Text);
-                BeanstalkColors[index] = fallback.GetOrDefault<FColor>("Color");
-            }
-        }
-        
-        if (await Provider.TryLoadObjectAsync("/BeanstalkCosmetics/Cosmetics/DataTables/DT_BeanstalkCosmetics_MaterialTypes") is UDataTable beanstalkMaterialTypesTable)
-        {
-            foreach (var (name, fallback) in beanstalkMaterialTypesTable.RowMap)
-            {
-                var index = int.Parse(name.Text);
-                var color = new FLinearColor();
-                foreach (var property in fallback.Properties)
-                {
-                    if (property.Tag is null) continue;
-                    
-                    var actualName = property.Name.Text.SubstringBefore("_");
-                    switch (actualName)
-                    {
-                        case "Metallic":
-                        {
-                            color.R = (float) property.Tag.GetValue<double>();
-                            break;
-                        }
-                        case "Roughness":
-                        {
-                            color.G = (float) property.Tag.GetValue<double>();
-                            break;
-                        }
-                        case "Emissive":
-                        {
-                            color.B = (float) property.Tag.GetValue<double>();
-                            break;
-                        }
-                    }
-                }
-                
-                BeanstalkMaterialProps[index] = color;
-            }
-        }
-        
-        if (await Provider.TryLoadObjectAsync("/BeanstalkCosmetics/Cosmetics/DataTables/DT_PatternAtlasTextureSlots") is UDataTable beanstalkAtlasSlotsTable)
-        {
-            foreach (var (name, fallback) in beanstalkAtlasSlotsTable.RowMap)
-            {
-                var index = int.Parse(name.Text);
-                foreach (var property in fallback.Properties)
-                {
-                    if (property.Tag is null) continue;
-                    
-                    var actualName = property.Name.Text.SubstringBefore("_");
-                    if (!actualName.Equals("UV")) continue;
-                    
-                    BeanstalkAtlasTextureUVs[index] = property.Tag.GetValue<FVector>();
-                }
-            }
-        }
-        
-        foreach (var path in MaleLobbyMontagePaths)
-        {
-            MaleLobbyMontages.AddIfNotNull(await Provider.TryLoadObjectAsync<UAnimMontage>(path));
-        }
-        
-        foreach (var path in FemaleLobbyMontagePaths)
-        {
-            FemaleLobbyMontages.AddIfNotNull(await Provider.TryLoadObjectAsync<UAnimMontage>(path));
         }
     }
 }
